@@ -14,10 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-//import java.util.Comparator;
-import java.util.InputMismatchException;
 import java.util.Iterator;
-//import java.util.List;
 import java.util.Scanner;
 import model.InterfaceList;
 import model.Vehicle;
@@ -31,7 +28,8 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     Scanner sc= new Scanner(System.in);
     
     public boolean checkIdExist(String a) {
-        for(Vehicle v : list){
+        ArrayList<Vehicle> check = readFromFile();
+        for(Vehicle v : check){
             if(v.getIdVehicle().equals(a)){
                 return true;
             }
@@ -94,8 +92,13 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
 
 //            sc.nextLine();
             Vehicle newVehicle = new Vehicle(id,name,color,price,brand,type,productYear);
-            list.add(newVehicle);
-            saveToFile();
+            this.add(newVehicle);
+            System.out.print("Do you want to save to File[Y/N] : ");
+            String save = sc.nextLine();
+            if(save.equalsIgnoreCase("y")){
+                saveToFile();
+            }
+            
             System.out.println("Added successfully");
             System.out.print("Do you want to go back to the main menu[Y/N] :");
             result = sc.nextLine();
@@ -281,37 +284,38 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         return list;
     }
     public void saveToFile() {
+        ArrayList<Vehicle> v = readFromFile();
+        v.addAll(this);
         try (FileOutputStream fileOutputStream = new FileOutputStream("src\\data\\Vehicle.dat");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
             
-            objectOutputStream.writeObject(list);
+            objectOutputStream.writeObject(v);
             System.out.println("Saved to file successfully!!!");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Failed to save to file!!!");
         }
     }
-    //5. Print Vehicle list
+    //7.Printing list Vehicles the file.
     @Override
     public void print() {
-        System.out.println("Display vehicle list");
-        System.out.println("1.Show all list");
-        System.out.println("2.Show all(descending by price_vehicle)");
+        System.out.println("Printing list Vehicles the file.");
+        System.out.println("1. Print all list");
+        System.out.println("2. Print all(descending by price_vehicle)");
         int choice = sc.nextInt();
         switch(choice){
             case 1: 
-                displayAll();
+                printAll();
                 break;
             case 2:
-                displayDescending();
+                printDescending();
                 break;
             default :
                 break;
         }
     }
-    public void displayAll(){
-         ArrayList<Vehicle> vehicleList ;
-         vehicleList = readFromFile();
+    public void printAll(){
+         ArrayList<Vehicle> vehicleList = readFromFile() ;
         if(vehicleList.isEmpty()){
             System.out.println("Vehicle List is Empty");
             return;
@@ -320,7 +324,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
             System.out.println(v.toString());
         }
     }
-    public void displayDescending(){
+    public void printDescending(){
         ArrayList<Vehicle> vehicleList = readFromFile();
         if(vehicleList.isEmpty()){
             System.out.println("Vehicle List is Empty");
@@ -402,8 +406,46 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         this.clear();
     }
     
-    //7.Print
-    //7.1 print all
+    //5.Print
+    //5.1 print all
+    @Override
+    public void display(){
+        System.out.println("Display vehicle list");
+        System.out.println("1.Show all list");
+        System.out.println("2.Show all(descending by price_vehicle)");
+        int choice = sc.nextInt();
+        switch(choice){
+            case 1: 
+                displayAll();
+                break;
+            case 2:
+                printDescending();
+                break;
+            default :
+                break;
+        }
+    }
+    public void displayAll(){
+         if(this.isEmpty()){
+            System.out.println("Vehicle List is Empty");
+            return;
+        }
+        for(Vehicle v : this){
+            System.out.println(v);
+        } 
+     }
     
+    public void displayDescending(){
+        if(this.isEmpty()){
+            System.out.println("Vehicle List is Empty");
+            return;
+        }
+        Collections.sort(list);
+        Collections.reverse(list);
+        for(Vehicle v : list){
+            System.out.println(v);
+        }
+    }
+   
 }
 
