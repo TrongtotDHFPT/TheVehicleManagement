@@ -31,8 +31,8 @@ public class VehicleManagement {
             System.out.println("        4. Find Vehicle.");
             System.out.println("        5. Display Vehicle list.");
             System.out.println("        6. Save data to file.");
-//            System.out.println("        7.Print Vehicle list.");
-            System.out.println("        7.Exit");
+            System.out.println("        7.Printing list Vehicles the file.");
+            System.out.println("        8.Exit");
             System.out.print("Enter your choice : ");
             choice = sc.nextInt();
             switch (choice) {
@@ -43,7 +43,7 @@ public class VehicleManagement {
                     run.checkExist();
                     break;
                 case 2:
-                    run.update(); // bug
+                    run.update(); 
                     break;  
                 case 3:
                     run.delete();
@@ -52,16 +52,16 @@ public class VehicleManagement {
                     run.find();
                     break;
                 case 5:
-                    run.print();
+                    run.display();
                     break;
                 case 6:
                     run.saveToFile();
                     run.removeAll();
-                    break;
-//                case 7:
-////                    run.print();
-//                    break;    
+                    break; 
                 case 7:
+                    run.print();
+                    break;
+                case 8:
                     temp = false;
                     break;
                 default:

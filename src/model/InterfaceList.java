@@ -24,5 +24,6 @@ public interface InterfaceList {
   void removeAll();
 
   public void checkExist();
+  void display();
 
 }

@@ -30,7 +30,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     public boolean checkIdExist(String a) {
         ArrayList<Vehicle> check = readFromFile();
         for(Vehicle v : check){
-            if(v.getIdVehicle().equals(a)){
+            if(v.getIdVehicle().equalsIgnoreCase(a)){
                 return true;
             }
         }
@@ -111,11 +111,13 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     public void checkExist() {
         boolean keepChecking = true;
         String result;
-        boolean flag = true;
+//        boolean flag = true;
         ArrayList<Vehicle> check = readFromFile();
         System.out.print("Please press[Enter] to start");
-            sc.nextLine();
+        sc.nextLine();
+        System.out.println("");
         while(keepChecking){
+            boolean flag = true;
             System.out.print("Enter id to check Exist : ");
             String idCheck = sc.nextLine();
             
@@ -128,15 +130,17 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
             }
             
             if(!flag){
-                System.out.println("Exist Vehicle");
+                System.out.println("***Exist Vehicle***");
+                
             }else
                 System.out.println("***No Vehicle Found***");
-            System.out.print("Do you want to go back to the main menu[Y/N] :");
-            result = sc.nextLine();
-            
+                System.out.println("[Y] - to go back to the main menu   ||  [Any key]-to continue Check Exist Vehilce");
+                System.out.print("Enter your choice :");
+                result = sc.nextLine();   
             if(result.equalsIgnoreCase("y")){
                 keepChecking = false;
             }
+            
         }
     }
     //3.delete 
@@ -155,31 +159,29 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         while (iter.hasNext()) {
             Vehicle v = iter.next();
             if (idDelete.equalsIgnoreCase(v.getIdVehicle())) {
-                
+                flag = true;
                 System.out.println("Are you sure you want to delete this vehicle?");
                 System.out.println(v.toString());
                 System.out.print("Yes-[Y]/No-[N]: ");
                 choice = sc.nextLine();
-
-                if (choice.equalsIgnoreCase("y")) {
+                
+                if (choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("yes")) {
                     iter.remove();  
                     try (FileOutputStream fileOutputStream = new FileOutputStream("src\\data\\Vehicle.dat");
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-                        flag = true;
+//                        flag = true;
                         objectOutputStream.writeObject(check);
-                        System.out.println("Vehicle removed successfully");
-                        
-                    } catch (IOException e) {
+                        System.out.println("Vehicle removed successfully");   
+                    }catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("***Failed to delete***");
                     }
-                } else {
+                }else
                     System.out.println("***Vehicle has not been deleted***");
-                }
                 break;
             }
         }
-        if (!flag) {
+        if (!flag){
             System.out.println("***Vehicle does not exist***");
         }
     } 
@@ -191,6 +193,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         boolean temp = true;
         System.out.print("Please press[Enter] to start");
             sc.nextLine();
+            System.out.println("");
         System.out.print("Enter id to update information :");
         id = sc.nextLine();
         ArrayList<Vehicle> listVehicle = readFromFile();
@@ -199,7 +202,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
             {   
                 temp = false;
                 for(Vehicle x : listVehicle){
-                    if(id.equals(x.getIdVehicle())){
+                    if(x.getIdVehicle().equalsIgnoreCase(id)){
                         System.out.println("==============================================|| The vehi1cle that you to update Information ||==============================================");
                         System.out.println(x.toString());
                     }
@@ -217,14 +220,11 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                         
                         float newPrice = Validation.checkPriceUp();
                         int newProductYear = Validation.checkProductYearUp();
-                        
 //                        System.out.print("Enter new price :");
 //                        float newPrice = sc.nextFloat();
 //                        System.out.print("Enter new product year :");
 //                        int newProductYear = sc.nextInt();
-
                         ArrayList<Vehicle> check = readFromFile();
-                        
                         for(Vehicle vehicle : check ){
                             if(vehicle.getIdVehicle().equalsIgnoreCase(id)){
                                 if(!newName.isEmpty()){
@@ -239,11 +239,10 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                                 if(!newType.isEmpty()){
                                     vehicle.setTypeVehicle(newType);
                                 }
-//                              
+                              
                                 if(newPrice != 0){
                                     vehicle.setPriceVehicle(newPrice);
-                                }
-                               
+                                }                  
                                 
                                 if(newProductYear != 0){
                                     vehicle.setProductYear(newProductYear);
@@ -252,17 +251,15 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                         }
                         try (FileOutputStream fileOutputStream = new FileOutputStream("src\\data\\Vehicle.dat");
                             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-
-                               objectOutputStream.writeObject(check);
-                               System.out.println("Update successfully");
-                               objectOutputStream.close();
-                               fileOutputStream.close();
+                            objectOutputStream.writeObject(check);
+                            System.out.println("Update successfully");
+                            objectOutputStream.close();
+                            fileOutputStream.close();
                         } catch (IOException e) {
-                               e.printStackTrace();
-                               System.out.println("Failed to update");
+                            e.printStackTrace();
+                            System.out.println("Failed to update");
                         }
-            }else
-            {
+            }else{
                 System.out.println("Vehicle does not exist");
                 break;
             } 
@@ -302,6 +299,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         System.out.println("Printing list Vehicles the file.");
         System.out.println("1. Print all list");
         System.out.println("2. Print all(descending by price_vehicle)");
+        System.out.print("Enter your choice :");
         int choice = sc.nextInt();
         switch(choice){
             case 1: 
