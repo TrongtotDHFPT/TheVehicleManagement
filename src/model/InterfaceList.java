@@ -16,7 +16,7 @@ public interface InterfaceList {
   void add(); 
   void delete();
   void update();
-  void find();
+  void search();
   void saveToFile();
   
   void print();

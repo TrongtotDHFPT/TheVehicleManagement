@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner;
 import model.InterfaceList;
@@ -89,17 +90,14 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                 System.out.print("Enter type :");
                 type = sc.nextLine();
             }while(type.isEmpty());
-
-//            sc.nextLine();
             Vehicle newVehicle = new Vehicle(id,name,color,price,brand,type,productYear);
             this.add(newVehicle);
             System.out.print("Do you want to save to File[Y/N] : ");
             String save = sc.nextLine();
             if(save.equalsIgnoreCase("y")){
                 saveToFile();
+                System.out.println("Added successfully");
             }
-            
-            System.out.println("Added successfully");
             System.out.print("Do you want to go back to the main menu[Y/N] :");
             result = sc.nextLine();
             if(result.equalsIgnoreCase("y")){
@@ -111,7 +109,6 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     public void checkExist() {
         boolean keepChecking = true;
         String result;
-//        boolean flag = true;
         ArrayList<Vehicle> check = readFromFile();
         System.out.print("Please press[Enter] to start");
         sc.nextLine();
@@ -169,7 +166,6 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                     iter.remove();  
                     try (FileOutputStream fileOutputStream = new FileOutputStream("src\\data\\Vehicle.dat");
                         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-//                        flag = true;
                         objectOutputStream.writeObject(check);
                         System.out.println("Vehicle removed successfully");   
                     }catch (IOException e) {
@@ -220,10 +216,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                         
                         float newPrice = Validation.checkPriceUp();
                         int newProductYear = Validation.checkProductYearUp();
-//                        System.out.print("Enter new price :");
-//                        float newPrice = sc.nextFloat();
-//                        System.out.print("Enter new product year :");
-//                        int newProductYear = sc.nextInt();
+
                         ArrayList<Vehicle> check = readFromFile();
                         for(Vehicle vehicle : check ){
                             if(vehicle.getIdVehicle().equalsIgnoreCase(id)){
@@ -313,13 +306,13 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         }
     }
     public void printAll(){
-         ArrayList<Vehicle> vehicleList = readFromFile() ;
-        if(vehicleList.isEmpty()){
+         ArrayList<Vehicle> check = readFromFile() ;
+        if(check.isEmpty()){
             System.out.println("Vehicle List is Empty");
             return;
         }
-        for(Vehicle v : vehicleList){
-            System.out.println(v.toString());
+        for(Vehicle v : check){
+            System.out.println(v);
         }
     }
     public void printDescending(){
@@ -336,51 +329,49 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     }
     //4. Find Vehicle.
     @Override
-    public void find() {
-        //4.1Searching by id.
-        //4.2Searching by name.
-        boolean running = true;
+    public void search() {
+    //4.1Searching by id.
+    //4.2Searching by name.
         int choice;
-        while(running){
         System.out.println("===Searching vehicle===");
         System.out.println("   1.Searching by id  ");
         System.out.println("   2.Searching by name");
-        System.out.println("   Any key to back the main menu");
-        System.out.print("Please enter your choice : ");
+        System.out.print("Please enter your choice : ");            
         choice = sc.nextInt();
-        switch(choice){
-            case 1 :
+        switch (choice) {
+            case 1:
                 searchById();
                 break;
-            case 2 :
+            case 2:
                 searchByName();
                 break;
-            default :
-                running = false;
+            default:
                 break;
-        }
         }
     }
     public void searchByName(){
         ArrayList<Vehicle> check = readFromFile();
         System.out.print("Please press[Enter] to start");
-            sc.nextLine();
+        sc.nextLine();
+        System.out.println("");
         System.out.print("Enter name vehicle : "); 
         String nameSearch = sc.nextLine();
         if(nameSearch.isEmpty()){
             System.out.println("Name is empty");
             return;
         }
+        //làm lại
         Collections.sort(check);
         Collections.reverse(check);
         for(Vehicle v : check){
             if(v.getNameVehicle().contains(nameSearch)){
-                System.out.println(v.toString());
+                System.out.println(v);
             }
         }
     }
     
     public void searchById(){
+        boolean flag = false;
         ArrayList<Vehicle> check = readFromFile();
         System.out.print("Please press[Enter] to start");
             sc.nextLine();
@@ -391,12 +382,14 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
             System.out.println("ID is empty");
             return;
         }
-        Collections.sort(check);
-        Collections.reverse(check);
         for(Vehicle v : check){
             if(v.getIdVehicle().equalsIgnoreCase(idSearch)){
-                System.out.println(v.toString());
+                System.out.println(v);
+                flag = true;
             }
+        }
+        if(!flag){
+            System.out.println("***The vehicle does not exist***");
         }
     }
     @Override

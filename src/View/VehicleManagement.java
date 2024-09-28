@@ -49,7 +49,7 @@ public class VehicleManagement {
                     run.delete();
                     break;
                 case 4:
-                    run.find();
+                    run.search();
                     break;
                 case 5:
                     run.display();
