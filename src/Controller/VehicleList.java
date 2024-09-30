@@ -14,7 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.InputMismatchException;
+//import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Scanner;
 import model.InterfaceList;
@@ -28,6 +28,7 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     ArrayList<Vehicle> list = new ArrayList<>();
     Scanner sc= new Scanner(System.in);
     
+    @Override
     public boolean checkIdExist(String a) {
         ArrayList<Vehicle> check = readFromFile();
         for(Vehicle v : check){
@@ -67,17 +68,17 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                     System.out.print("Values that already exist, please re-enter :");
                 }
             }while(checkIdExist(id));
-            
+
             do{
                 System.out.print("Enter name :");
                 name = sc.nextLine();
             }while(name.isEmpty());
-            
+
             do{
                 System.out.print("Enter color :");
                 color = sc.nextLine();
             }while(color.isEmpty());
-            
+
             price =Validation.checkPriceUp();
             productYear = Validation.checkProductYearUp();
 
@@ -85,19 +86,16 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
                 System.out.print("Enter brand :");
                 brand = sc.nextLine();
             }while(brand.isEmpty());
-            
+
             do{
                 System.out.print("Enter type :");
                 type = sc.nextLine();
             }while(type.isEmpty());
+            
             Vehicle newVehicle = new Vehicle(id,name,color,price,brand,type,productYear);
             this.add(newVehicle);
-            System.out.print("Do you want to save to File[Y/N] : ");
-            String save = sc.nextLine();
-            if(save.equalsIgnoreCase("y")){
-                saveToFile();
-                System.out.println("Added successfully");
-            }
+            System.out.println("Added successfully");
+            System.out.println("***You should save to file before***");
             System.out.print("Do you want to go back to the main menu[Y/N] :");
             result = sc.nextLine();
             if(result.equalsIgnoreCase("y")){
@@ -263,9 +261,9 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
     public ArrayList<Vehicle> readFromFile() {
         try (FileInputStream fileInputStream = new FileInputStream("src\\data\\Vehicle.dat");
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
-            
+
             list = (ArrayList<Vehicle>)objectInputStream.readObject();
-            
+
         }catch (EOFException errorEof) {
         }catch (FileNotFoundException e) {
         }catch (IOException | ClassNotFoundException error) {
@@ -273,17 +271,17 @@ public class VehicleList extends ArrayList<Vehicle> implements InterfaceList {
         }
         return list;
     }
-    public void saveToFile() {
+     public void saveToFile() {
         ArrayList<Vehicle> v = readFromFile();
         v.addAll(this);
         try (FileOutputStream fileOutputStream = new FileOutputStream("src\\data\\Vehicle.dat");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
-            
+
             objectOutputStream.writeObject(v);
-            System.out.println("Saved to file successfully!!!");
+            System.out.println("Saved to file successfully");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Failed to save to file!!!");
+            System.out.println("Failed to save to file");
         }
     }
     //7.Printing list Vehicles the file.
